@@ -141,7 +141,7 @@
                                 @if(!empty($data->img))
                                 <img src="{{ asset(str_replace('../', '', $data->img)) }}" alt="Foto Mahasiswa" width="50px" class="img-thumbnail">
                                 @else
-                                <img src="{{ asset($data->kelamin == 'l' ? 'uploads/mahasiswa/mahasiswa_laki.jpg' : 'uploads/mahasiswa/mahasiswa_perempuan.jpg') }}" alt="Foto" width="50px" class="img-thumbnails">
+                                <img src="{{ asset($data->kelamin == 'l' ? 'asset_web/img/mhs_laki_laki.jpg' : 'asset_web/img/mhs_perempuan.jpg') }}" alt="Foto Mahasiswa" width="50px" class="img-thumbnail">
                                 @endif
                             </button>
                         </td>
@@ -297,7 +297,8 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form action="ubah.php" method="post">
+            <form action="" method="post">
+              @csrf
             <div class="modal-body">
               <div class="form-group">
                     <label for="nim">NIM</label>
@@ -386,11 +387,16 @@
     $(e.currentTarget).find('input[name="email"]').val(email);
     $(e.currentTarget).find('select[name="kelamin"]').val(kelamin);
   });
+</script>
 
-  $('#modal-foto').on('show.bs.modal', function(e){
+<script>
+  $('#modal-foto').on('show.bs.modal', function (e) {
     var nim = $(e.relatedTarget).data('nim');
     $('#modal-nim').val(nim);
-    var url = "{{ url('/admin/mahasiswa/update_foto')}}/" + nim;
+
+    var url = "{{ route('admin.mahasiswa.update_foto', ':nim') }}";
+    url = url.replace(':nim', nim);
+
     $('#form-foto').attr('action', url);
   });
 </script>

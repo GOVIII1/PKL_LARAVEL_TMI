@@ -119,7 +119,7 @@
                       @if(!empty($data->img))
                       <img src="{{ asset(str_replace('../','',$data->img)) }}" alt="Foto Dosen" width="50px" class="img-thumbnail">
                       @else
-                      <img src="{{ asset($data->kelamin == 'l' ? 'uploads/dosen/dosen_laki.jpg' : 'uploads/dosen/dosen_perempuan.jpg') }}" alt="Foto Dosen" width="50px" class="img-thumbnail">
+                      <img src="{{ asset($data->kelamin == 'l' ? 'asset_web/img/dosen_lk.jpg' : 'asset_web/img/dosen_pr.jpg') }}" alt="Foto Dosen" width="50px" class="img-thumbnail">
                       @endif
                     </button>
                   </td>
@@ -293,7 +293,10 @@
   $('#modal-foto').on('show.bs.modal', function (e) {
     var nik = $(e.relatedTarget).data('nik');
     $('#modal-nik').val(nik);
-    var url = "{{ url('/admin/dosen/update_foto') }}/" + nik;
+    
+    var url = "{{ route('admin.dosen.update_foto', ':nik') }}";
+    url = url.replace(':nik', nik);
+    
     $('#form-foto').attr('action', url);
   });
 </script>
