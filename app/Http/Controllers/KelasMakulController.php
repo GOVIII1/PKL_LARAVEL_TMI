@@ -46,13 +46,18 @@ class KelasMakulController extends Controller
         $matkul = Matkul::all();
         $dosen = Dosen::all();
         $jurusan = Jurusan::all();
-        $kelas = [];
+
+        $nik_dosen = session('user.username');
+
+        $query = Kelas::with(['akademik','makul','dosen','jurusan'])
+                      ->where('nik', $nik_dosen);
 
         if ($request->has('kode_akd') && $request->kode_akd != '') {
-            $kelas = Kelas::with(['akademik','makul','dosen','jurusan'])
-            ->where('kode_akd', $request->kode_akd)
-            ->get();
+            $query->where('kode_akd', $request->kode_akd);
         }
+
+        $kelas = $query->get();
+
         return view('dosen_data_kelas.index', compact(
             'periode',
             'matkul',

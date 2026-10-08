@@ -7,12 +7,10 @@ use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-    /**
-     * Tampilkan halaman login
-     */
+    //tampilkan halaman login
     public function showLogin()
     {
-        // Kalau sudah login, redirect ke home sesuai peran
+        //kalau udah login redirect ke home sesuai peran
         if (session()->has('user')) {
             return $this->redirectByPeran(session('user')['peran']);
         }
@@ -20,10 +18,7 @@ class AuthController extends Controller
         return view('login');
     }
 
-    /**
-     * Cek username + password saja (AJAX) — sebelum modal PIN muncul
-     * Return JSON: { valid: true } atau { valid: false, message: '...' }
-     */
+    //cek username password doang via ajax sebelum modal pin muncul
     public function checkCredentials(Request $request)
     {
         $username = trim($request->input('username'));
@@ -48,9 +43,7 @@ class AuthController extends Controller
         return response()->json(['valid' => true]);
     }
 
-    /**
-     * Proses login (username + password sha1 / plaintext + pin)
-     */
+    //proses login lengkap username password pin
     public function login(Request $request)
     {
         $request->validate([
@@ -65,7 +58,7 @@ class AuthController extends Controller
         $pin      = trim($request->input('pin'));
         $pinSha1  = sha1($pin);
 
-        // Query ke tabel user menggunakan kolom 'password'
+        //query ke tabel user pake kolom password
         $user = DB::table('user')
             ->where('username', $username)
             ->where(function ($query) use ($passwordSha1, $rawPassword) {
@@ -82,7 +75,7 @@ class AuthController extends Controller
             return back()->with('error', 'Username, Password, atau PIN salah!');
         }
 
-        // Simpan data user ke session
+        //simpan data user ke session
         session([
             'user' => [
                 'id'       => $user->id,
@@ -95,20 +88,14 @@ class AuthController extends Controller
         return $this->redirectByPeran($user->peran);
     }
 
-
-    /**
-     * Logout — hapus session dan redirect ke login
-     */
+    //logout hapus session redirect ke login
     public function logout()
     {
         session()->forget('user');
         return redirect('/');
     }
 
-    /**
-     * Redirect berdasarkan peran (sama seperti native)
-     * M = Mahasiswa, A = Admin, selain itu = Dosen
-     */
+    //redirect berdasarkan peran m=mahasiswa a=admin selain itu dosen
     private function redirectByPeran(string $peran)
     {
         $peranLower = strtolower(trim($peran));

@@ -26,7 +26,8 @@
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
     </ul>
-
+    
+    <ul class="navbar-nav ml-auto">
 <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -43,6 +44,7 @@
           </a>
         </div>
       </li>
+      </ul>
   </nav>
   <!-- /.navbar -->
 
