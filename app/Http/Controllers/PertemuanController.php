@@ -18,6 +18,13 @@ class PertemuanController extends Controller
         return view('admin_data_kelas.pertemuan', compact('kelas', 'pertemuan'));
     }
 
+    public function index_dosen($id)
+    {
+        $kelas = Kelas::with(['akademik','dosen','jurusan','makul'])->findOrFail($id);
+        $pertemuan = Pertemuan::where('id_kelas', $id)->get();
+        return view('dosen_data_kelas.pertemuan', compact('kelas', 'pertemuan'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([

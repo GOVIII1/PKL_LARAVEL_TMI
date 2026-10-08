@@ -201,4 +201,31 @@ class DosenController extends Controller
         Excel::import(new DosenImport, $file);
         return redirect()->back()->with('success', 'Impor data berhasil');
     }
+    
+    public function ganti_password()
+    {
+        return view('dosen_ganti_password.index');
+    }
+
+    public function proses_ganti_password(Request $request)
+    {
+        $userSession = session('user');
+        $username = $userSession['username'];
+
+        $user =User::where('username', $username)->first();
+
+        $input_password_lama = sha1(trim($request->password_lama));
+        $input_password_baru = sha1(trim($request->password_baru));
+        $input_pin = sha1(trim($request->pin));
+
+        if ($input_password_lama === $user->password && $input_pin === $user->pin) {
+
+        $user->password = $input_password_baru;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password Berhasil di update!');
+        }else{
+            return redirect()->back()->with('error', 'Password/Pin salah');
+        }
+    }
 }

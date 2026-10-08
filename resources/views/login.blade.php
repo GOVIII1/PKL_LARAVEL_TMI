@@ -140,7 +140,6 @@ $(document).ready(function() {
           // kalau valid, buka modal PIN
           $('#modal-default').modal('show');
         } else {
-          // kalau salah, tampil pesan error
           Toast.fire({
             icon: 'error',
             title: res.message
@@ -160,7 +159,6 @@ $(document).ready(function() {
     });
   });
 
-  // tampil error dari session 
   @if (session('error'))
     Toast.fire({
       icon: 'error',

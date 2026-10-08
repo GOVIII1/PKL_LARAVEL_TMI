@@ -52,7 +52,7 @@
       </div>
 
       <!-- Sidebar Menu -->
-      @include('layouts.sidebar_admin')
+      @include('layouts.sidebar_dosen')
       <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
@@ -124,10 +124,7 @@
                 <h3 class="card-title">Daftar Mahasiswa Kelas</h3>
             </div>
             <div class="card-body">
-                <button type="button" class="btn btn-danger mb-2" data-toggle="modal" data-target="#modal-tambah"><i class="fas fa-plus"></i> Tambah Data</button>
-                <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#modal-impor"><i class="fas fa-file-excel"></i> Impor Data</button>
-                <a href="{{ route('admin.detail.kelas.export_excel') }}" target="_blank" class="btn btn-success mb-2"><i class="fas fa-file-excel"></i> Export Data excel</a>
-                <a href="{{ route('admin.kelas.index') }}" class="btn btn-secondary mb-2">Kembali</a>
+                <a href="{{ route('dosen.kelas.index') }}" class="btn btn-secondary mb-2">Kembali</a>
 
                 <table id="example1" class="table table-bordered table-striped">
                     <thead>
@@ -135,7 +132,6 @@
                             <th width="5%">No</th>
                             <th>NIM</th>
                             <th>Nama</th>
-                            <th width="12%">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,11 +140,6 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nim }}</td>
                                 <td>{{ $item->mahasiswa->nama ?? '-' }}</td>
-                                <td>
-                                    <a href="{{ route('admin.detail.kelas.hapus', $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin ingin menghapus data ini?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
                             </tr>
                         @empty
                             <tr>
@@ -167,96 +158,7 @@
   </div>
   <!-- /.content-wrapper -->
 
-  <!-- modal tambah  -->
-  <div class="modal fade" id="modal-tambah">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tambah Data Mahasiswa</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('admin.detail.kelas.store') }}" method="post">
-                @csrf
-                <div class="modal-body">
-                    <input type="hidden" name="id_klsmk" value="{{ $kelas->id }}">
-
-                    <div class="form-group">
-                        <label for="nim">Mahasiswa</label>
-                        <select name="nim" class="form-control" id="nim" required>
-                            <option value="">-- Pilih Mahasiswa --</option>
-                            @foreach ($mahasiswa as $mhs)
-                                <option value="{{ $mhs->nim }}">{{ $mhs->nim }} - {{ $mhs->nama }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Tambah</button>
-                </div>
-            </form>
-        </div>
-    </div>
-  </div>
-
-  <!-- modal impor -->
-  <div class="modal fade" id="modal-impor">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Impor Data Detail Kelas Matkul</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('admin.detail.kelas.import_excel') }}" method="post" enctype="multipart/form-data">
-                @csrf
-                <input type="hidden" name="id_kelas" value="{{ $kelas->id }}">
-                <div class="modal-body">
-                    <label>Download Template :</label>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modal-download-template" data-dismiss="modal">
-                            <i class="fas fa-download"></i> Download Template
-                        </button>
-                    </div>
-                    <div class="form-group">
-                        <label for="file">Upload File Detail Kelas Matkul</label>
-                        <input type="file" class="form-control" name="file_excel" required>
-                    </div>
-                </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Impor</button>
-                </div>
-            </form>
-        </div>
-    </div>
-  </div>
-
-  <!-- modal download template -->
-  <div class="modal fade" id="modal-download-template">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Download Template</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Silahkan download file template di bawah ini:</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                <a href="{{ asset('template/template_detail_kelas.xls') }}" class="btn btn-primary" download>
-                    Download File
-                </a>
-            </div>
-        </div>
-    </div>
-  </div>
+  <!-- modal  -->
 
   <!-- Main Footer -->
   @include('layouts.footer')

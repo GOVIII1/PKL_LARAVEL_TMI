@@ -17,7 +17,22 @@ class PresensiController extends Controller
         return view('admin_data_kelas.presensi', compact('pertemuan', 'kelas'));
     }
 
+    public function index_dosen($id_pertemuan)
+    {
+        $pertemuan = Pertemuan::findOrFail($id_pertemuan);
+        $kelas = Kelas::with(['dosen', 'makul', 'jurusan'])->findOrFail($pertemuan->id_kelas);
+
+        return view('dosen_data_kelas.presensi', compact('pertemuan', 'kelas'));
+    }
+
     public function tabel($id_pertemuan)
+    {
+        $presensi = Presensi::with('mahasiswa')->where('id_pertemuan', $id_pertemuan)->get();
+
+        return view('admin_data_kelas.tabel_kehadiran', compact('presensi'));
+    }
+
+    public function tabel_dosen($id_pertemuan)
     {
         $presensi = Presensi::with('mahasiswa')->where('id_pertemuan', $id_pertemuan)->get();
 

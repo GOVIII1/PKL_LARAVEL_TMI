@@ -29,10 +29,10 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
 
-      <!-- Notifications Dropdown Menu -->
+    <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-user"></i>
+            <i class="far fa-user"></i> {{ session('user.nama') }} - [{{ session('user.peran') }}]
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <div class="dropdown-divider"></div>
@@ -106,6 +106,7 @@
                 </div>
                 <div class="card-body">
                     <button type="button" class="btn btn-danger mb-2" data-toggle="modal" data-target="#modal-tambah"><i class="fas fa-plus"> Tambah Data</i></button>
+                    <button type="button" class="btn btn-success mb-2"data-toggle="modal" data-target="#modal-impor"><i class="fas fa-file-excel"></i> Impor Data</button>
 
                     <table class="table table-bordered table-striped" id="example1">
                         <thead>
@@ -229,6 +230,79 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+      <!-- /.modal buat impor -->
+      <div class="modal fade" id="modal-impor">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Impor Data kelas matkul</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="{{ route('admin.kelas.import_excel') }}" method="post" enctype="multipart/form-data" >
+                @csrf
+            <div class="modal-body">
+              <label>Downlaod Template :</label>
+              <div class="form-group">                
+                <button type="button" class="btn btn-primary mb-2"data-toggle="modal" data-target="#modal-download-template"><i class="fas fa-download"></i> Download Template</button>                
+              </div> 
+              <div class="form-group">
+                <label>Downlaod Data :</label>
+              </div>             
+              <div class="form-group">
+                    <input type="text" maxlength="10" name="id_kelas" class="form-control" id="id_kelas" value="" hidden>
+                    <a href="{{ route('admin.dosen.export_excel') }}" type="button" target="_blank" class="btn btn-success mb-2">Data Dosen</a>
+                    <a href="{{ route('admin.mahasiswa.export_excel') }}" type="button" target="_blank" class="btn btn-success mb-2">Data Mahasiswa</a>
+                    <a href="{{ route('admin.perak.export_excel') }}" type="button" target="_blank" class="btn btn-success mb-2">Data Periode Akademik</a>
+                    <a href="{{ route('admin.matkul.export_excel') }}" type="button" target="_blank" class="btn btn-success mb-2">Data Matkul</a>
+                    <a href="{{ route('admin.jurusan.export_excel') }}" type="button" target="_blank" class="btn btn-success mb-2">Data Jurusan</a>
+              </div>
+              <div class="form-group">
+                <label for="file">Upload File kelas matkul</label>
+                <input type="file" class="form-control" name="file_excel" required>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+              <button type="submit" class="btn btn-primary" name="btn_impor">Impor</button>
+              
+            </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+
+      <!-- modal download template-->
+      <div class="modal fade" id="modal-download-template">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title"></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <form action="" method="post" enctype="multipart/form-data" >
+            <div class="modal-body">
+              <div class="form-group">
+                <p>Silahkan Download File dibawah</p>
+              </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
+              <a href="{{ asset('template/template_kelas.xls') }}" download="template_kelas.xls" class="btn btn-primary">Download File</a>
+              
+            </div>
+            </form>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
   <!-- Main Footer -->
   @include('layouts.footer')
 </div>

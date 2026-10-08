@@ -40,10 +40,10 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
 
-      <!-- Notifications Dropdown Menu -->
+<!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-user"></i>
+            <i class="far fa-user"></i> {{ session('user.nama') }} - [{{ session('user.peran') }}]
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
           <div class="dropdown-divider"></div>

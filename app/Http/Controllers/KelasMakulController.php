@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\KelasMakulImport;
 use Illuminate\Http\Request;
 use App\Models\Kelas;
 use App\Models\Perak;
@@ -13,6 +14,7 @@ use App\Models\Pertemuan;
 use App\Models\DetailKelas;
 use App\Models\Presensi;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KelasMakulController extends Controller
 {
@@ -30,6 +32,28 @@ class KelasMakulController extends Controller
             ->get();
         }
         return view('admin_data_kelas.index', compact(
+            'periode',
+            'matkul',
+            'dosen',
+            'jurusan',
+            'kelas'
+        ));
+    }
+
+    public function index_dosen(Request $request)
+    {
+        $periode = Perak::all();
+        $matkul = Matkul::all();
+        $dosen = Dosen::all();
+        $jurusan = Jurusan::all();
+        $kelas = [];
+
+        if ($request->has('kode_akd') && $request->kode_akd != '') {
+            $kelas = Kelas::with(['akademik','makul','dosen','jurusan'])
+            ->where('kode_akd', $request->kode_akd)
+            ->get();
+        }
+        return view('dosen_data_kelas.index', compact(
             'periode',
             'matkul',
             'dosen',
@@ -151,5 +175,12 @@ class KelasMakulController extends Controller
         $pdf = Pdf::loadView('admin_data_kelas.cetak_rekap_pdf', compact('kelas', 'total_pertemuan', 'rekap_presensi'));
         $pdf->setPaper('A4', 'portrait');
         return $pdf->stream('Rekap_presensi_' . $kelas->nama_kelas . '.pdf');
+    }
+
+    public function import_excel(Request $request)
+    {
+        $file = $request->file('file_excel');
+        Excel::import(new KelasMakulImport, $file);
+        return redirect()->back()->with('success', 'Impor data kelas beserta mahasiswa berhasil');
     }
 }

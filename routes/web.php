@@ -95,12 +95,14 @@ Route::middleware('check.auth')->group(function () {
         Route::put('/admin_data_kelas/update/{id}', [KelasMakulController::class, 'update'])->name('admin.kelas.update');
         Route::get('/admin_data_kelas/hapus/{id}', [KelasMakulController::class, 'hapus'])->name('admin.kelas.hapus');
         Route::get('/admin_data_kelas/cetak_rekap/{id}', [KelasMakulController::class, 'cetak_rekap'])->name('admin.kelas.cetak_rekap');
+        Route::post('/admin_data_kelas/import_excel', [KelasMakulController::class, 'import_excel'])->name('admin.kelas.import_excel');
         
         //detail Kelas
         Route::get('/admin_detail_kelas/export_excel', [DetailKelasController::class, 'export_excel'])->name('admin.detail.kelas.export_excel');
         Route::get('/admin_detail_kelas/{id_klsmk}', [DetailKelasController::class, 'index'])->name('admin.detail.kelas.index');
         Route::post('/admin_detail_kelas/store', [DetailKelasController::class, 'store'])->name('admin.detail.kelas.store');
         Route::get('/admin_detail_kelas/hapus/{id}', [DetailKelasController::class, 'destroy'])->name('admin.detail.kelas.hapus');
+        Route::post('/admin_detail_kelas/import_excel', [DetailKelasController::class, 'import_excel'])->name('admin.detail.kelas.import_excel');
 
         //pertemuan
         Route::get('/admin_kelas_matkul/pertemuan/{id}', [PertemuanController::class, 'index'])->name('admin.pertemuan.index');
@@ -127,6 +129,32 @@ Route::middleware('check.auth')->group(function () {
         Route::get('/home_dosen', function () {
             return view('home_dosen.index');
         })->name('home.dosen');
+
+        //ganti pw
+        Route::get('/dosen_ganti_password', [DosenController::class, 'ganti_password'])->name('dosen.ganti.password.index');
+        Route::post('/dosen_ganti_password/proses', [DosenController::class, 'proses_ganti_password'])->name('dosen.password.proses');
+
+        //data Kelas
+        Route::get('/dosen_data_kelas', [KelasMakulController::class, 'index_dosen'])->name('dosen.kelas.index');
+        Route::get('/dosen_data_kelas/cetak_rekap/{id}', [KelasMakulController::class, 'cetak_rekap'])->name('dosen.kelas.cetak_rekap');
+        Route::post('/dosen_data_kelas/import_excel', [KelasMakulController::class, 'import_excel'])->name('dosen.kelas.import_excel');
+
+        //detail kelas
+        Route::get('/dosen_detail_kelas/{id_klsmk}', [DetailKelasController::class, 'index_dosen'])->name('dosen.detail.kelas.index');
+
+        //pertemuan
+        Route::get('/dosen_kelas_matkul/pertemuan/{id}', [PertemuanController::class, 'index_dosen'])->name('dosen.pertemuan.index');
+        Route::post('/dosen_kelas_matkul/pertemuan/store', [PertemuanController::class,'store'])->name('dosen.pertemuan.store');
+        Route::post('/dosen_kelas_matkul/pertemuan/update_bobot',[PertemuanController::class,'update_bobot'])->name('dosen.pertemuan.updatebobot');
+        Route::get('/dosen_kelas_matkul/pertemuan/cetak/{id}', [PertemuanController::class, 'cetak_pdf'])->name('dosen.pertemuan.cetak_pertemuan');
+
+        //presensi
+        Route::get('/dosen_kelas_matkul/presensi/{id_pertemuan}', [PresensiController::class, 'index_dosen'])->name('dosen.presensi.index');
+        Route::get('/dosen_kelas_matkul/presensi/status/{id}/{aksi}', [PresensiController::class, 'buka_tutup'])->name('dosen.presensi.buka.tutup');
+        Route::post('/dosen_kelas_matkul/presensi/update_status', [PresensiController::class, 'update_status'])->name('dosen.presensi.update.status');
+
+        //load tabel ajax
+        Route::get('/dosen_kelas_matkul/presensi/tabel/{id_pertemuan}', [PresensiController::class, 'tabel_dosen'])->name('dosen.presensi.tabel');
     });
 
     //role mahasiswa

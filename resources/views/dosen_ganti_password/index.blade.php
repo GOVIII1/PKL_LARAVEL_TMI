@@ -62,7 +62,7 @@
       </div>
 
       <!-- Sidebar Menu --> 
-      @include('layouts.sidebar_admin')
+      @include('layouts.sidebar_dosen')
       <!-- /.sidebar-menu -->
     <!-- /.sidebar -->
   </aside>
@@ -87,7 +87,7 @@
                         <h3 class="card-title"><i class="fas fa-lock"></i> Ganti Password</h3>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('admin.password.proses') }}" method="POST">
+                        <form action="{{ route('dosen.password.proses') }}" method="POST">
                             @csrf
                         <div class="form-group">
                             <label for="password_lama">Password Lama</label>

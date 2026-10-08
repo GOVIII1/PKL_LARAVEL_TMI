@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\DetailKelasImport;
 use App\Models\DetailKelas;
 use App\Models\Kelas;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use App\Exports\DetailKelasExport;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class DetailKelasController extends Controller
 {
@@ -20,6 +22,17 @@ class DetailKelasController extends Controller
         $mahasiswa = Mahasiswa::all();
 
         return view('admin_detail_kelas.index', compact('kelas', 'detail', 'mahasiswa'));
+    }
+
+    public function index_dosen($id_klsmk)
+    {
+        $kelas = Kelas::with(['akademik', 'dosen', 'jurusan', 'makul'])->findOrFail($id_klsmk);
+
+        $detail = DetailKelas::with('mahasiswa')->where('id_klsmk', $id_klsmk)->get();
+
+        $mahasiswa = Mahasiswa::all();
+
+        return view('dosen_detail_kelas.index', compact('kelas', 'detail', 'mahasiswa'));
     }
 
     public function store(Request $request)
@@ -55,6 +68,15 @@ class DetailKelasController extends Controller
     {
         $nama_file = 'Data_Detal_Kelas' . date('Y-m-d') . '.xlsx';
         return Excel::download(new DetailKelasExport, $nama_file);
+    }
+
+    public function import_excel(Request $request)
+    {
+        $file = $request->file('file_excel');
+        $id_kelas = $request->id_kelas;
+
+        Excel::import(new DetailKelasImport($id_kelas), $file);
+        return redirect()->back()->with('success', 'Import data Berhasil');
     }
 }
 
