@@ -21,7 +21,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <a href="#"><b>Sistem Informasi XYZ</a>
+    <a href="#"><b>Sistem Informasi PKL LARAVEL</a>
   </div>
   <!-- /.login-logo -->
   <div class="card">
