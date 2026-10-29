@@ -86,7 +86,7 @@
             <button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#modal-impor"><i class="fas fa-file-excel"></i> Impor Data Excel</button>
             <a href="{{ route('admin.dosen.export_excel') }}" class="btn btn-success mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"> Export Excel</i></a>
 
-            <table id="example1" class="table table-bordered table-striped">
+            <table id="tabel-dosen" class="table table-bordered table-striped">
               <thead>
                 <tr>
                   <th width="5%">No</th>
@@ -100,39 +100,7 @@
                 </tr>
               </thead>
               <tbody>
-                @foreach ($dosen as $data)
-                <tr>
-                  <td>{{ $loop->iteration }}</td>
-                  <td>{{ $data->nik }}</td>
-                  <td>{{ $data->nama }}</td>
-                  <td>{{ $data->kontak }}</td>
-                  <td>{{ $data->email }}</td>
-                  <td>
-                    @if($data->kelamin == 'l')
-                      Laki-Laki
-                    @else
-                      Perempuan
-                    @endif
-                  </td>
-                  <td align="center">
-                    <button type="button" class="btn btn-sm p-0" style="background: transparent; border: none;" data-toggle="modal" data-target="#modal-foto" data-nik="{{ $data->nik }}">
-                      @if(!empty($data->img))
-                      <img src="{{ asset(str_replace('../','',$data->img)) }}" alt="Foto Dosen" width="50px" class="img-thumbnail">
-                      @else
-                      <img src="{{ asset($data->kelamin == 'l' ? 'asset_web/img/dosen_lk.jpg' : 'asset_web/img/dosen_pr.jpg') }}" alt="Foto Dosen" width="50px" class="img-thumbnail">
-                      @endif
-                    </button>
-                  </td>
-                  <td>
-                    <a href="{{ route('admin.dosen.edit', $data->nik) }}" type="button" class="btn btn-warning btn-sm">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <a href="{{ route('admin.dosen.destroy', $data->nik) }}" class="btn btn-danger btn-sm" onclick="return confirm('Yakin Hapus?')">
-                      <i class="fas fa-trash"></i>
-                    </a>
-                  </td>
-                </tr>
-                @endforeach
+
               </tbody>
             </table>
           </div>
@@ -298,6 +266,25 @@
     url = url.replace(':nik', nik);
     
     $('#form-foto').attr('action', url);
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    $('#tabel-dosen').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('admin.dosen.index') }}",
+      columns: [
+        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+        {data: 'nik', name: 'nik'},
+        {data: 'nama', name: 'nama'},
+        {data: 'kontak', name: 'kontak'},
+        {data: 'email', name: 'email'},
+        {data: 'kelamin_teks', name: 'kelamin_teks'},
+        {data: 'foto_html', name: 'foto_html', orderable: false, searchable: false},
+        {data: 'aksi', name: 'aksi', orderable:false, searchable: false}
+      ]
+    });
   });
 </script>
 </body>

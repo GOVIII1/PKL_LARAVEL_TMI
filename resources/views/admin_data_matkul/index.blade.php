@@ -101,7 +101,7 @@
                 <a href="{{ route('admin.matkul.cetak_pdf') }}" class="btn btn-danger mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"> Export pdf</i></a>
                 <a href="{{ route('admin.matkul.export_excel') }}" class="btn btn-success mb-2" target="_blank"  type="button"><i class="fas fa-file-pdf">Export Excel</i></a>
 
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tabel-matkul" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th width="5%">no</th>
@@ -113,19 +113,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach ($matkul as $data)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $data->kode_makul }}</td>
-                            <td>{{ $data->nama_makul }}</td>
-                            <td>{{ $data->jml_sks }}</td>
-                            <td>{{ $data->jml_cpmk }}</td>
-                            <td>
-                                <a href="{{ route('admin.matkul.edit', $data->kode_makul) }}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="{{ route('admin.matkul.hapus', $data->kode_makul) }}" type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
+
                   </tbody>
                 </table>
               </div>
@@ -342,6 +330,23 @@
 
     $(e.currentTarget).find('input[name="nim"]').val(nim);
   })
+</script>
+<script>
+  $(document).ready(function() {
+    $('#tabel-matkul').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('admin.matkul.index') }}",
+      columns: [
+        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+        {data: 'kode_makul', name: 'kode_makul'},
+        {data: 'nama_makul', name: 'nama_makul'},
+        {data: 'jml_sks', name: 'jml_sks'},
+        {data: 'jml_cpmk', name: 'jml_cpmk'},
+        {data: 'aksi', name: 'aksi', orderable: false, searchable: false}
+      ]
+    });
+  });
 </script>
 </body>
 </html>

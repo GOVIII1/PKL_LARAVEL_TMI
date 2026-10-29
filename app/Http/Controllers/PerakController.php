@@ -10,13 +10,34 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\PerakExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\PerakImport;
+use Route;
+use Yajra\DataTables\DataTables;
 
 
 class PerakController extends Controller
 {
-    public function index(){
-        $perak = Perak::all();
-        return view('admin_data_periode_akademik.index', compact('perak'));
+    public function index(Request $request){
+        if ($request->ajax()) {
+            $data = Perak::query();
+
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('semester_teks', function($row){
+                return $row->semester == 'GL' ? 'Ganjil' : 'Genap';
+            })
+            ->addColumn('status_teks', function($row){
+                return $row->is_active == '1' ? 'Aktif' : 'Tidak Aktif';
+            })
+            ->addColumn('aksi', function($row){
+                $btnEdit = '<a href="'.route('admin.perak.edit', $row->kode_akd).'" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+                $btnDelete = '<a href="'.route('admin.perak.hapus', $row->kode_akd).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin Hapus?\')"><i class="fas fa-trash"></i></a>';
+
+                return $btnEdit . ' ' . $btnDelete;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
+        }
+        return view('admin_data_periode_akademik.index');
     }
 
     public function store(Request $request){

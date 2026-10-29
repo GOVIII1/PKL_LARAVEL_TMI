@@ -10,12 +10,27 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\MatkulExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MatkulImport;
+use Yajra\DataTables\Facades\DataTables;
 
 class MatkulController extends Controller
 {
-    public function index(){
-        $matkul = Matkul::all();
-        return view('admin_data_matkul.index', compact('matkul'));
+    public function index(Request $request){
+        if ($request->ajax()) {
+            $data =Matkul::query();
+
+            return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('aksi', function($row){
+                $btnEdit = '<a href="'.route('admin.matkul.edit', $row->kode_makul).'" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+                $btnDelete = '<a href="'.route('admin.matkul.hapus', $row->kode_makul).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin Hapus?\')"><i class="fas fa-trash"></i></a>';
+                
+                return $btnEdit . ' ' . $btnDelete;
+            })
+            ->rawColumns(['aksi'])
+            ->make(true);
+        }
+
+        return view('admin_data_matkul.index');
     }
 
     public function store(Request $request){

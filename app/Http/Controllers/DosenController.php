@@ -12,14 +12,39 @@ use Illuminate\Support\Facades\File;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\DosenExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class DosenController extends Controller
 {
-    public function index()
-    {
-        $dosen = Dosen::all();
+    public function index(Request $request){
+
+    if ($request->ajax()) {
+        $data = Dosen::query();
+
+        return DataTables::of($data)
+        ->addIndexColumn()
+        ->addColumn('kelamin_teks', function($row){
+            return $row->kelamin == 'l' ? 'Laki-laki' : 'Perempuan';
+        })
+        ->addColumn('foto_html', function($row){
+            $imgSrc = !empty($row->img)
+                ? asset(str_replace('../','', $row->img))
+                : asset($row->kelamin == 'l' ? 'asset_web/img/dosen_lk.jpg' : 'asset_web/img/dosen_pr.jpg');
+            
+            return              '<button type="button" class="btn btn-sm p-0" style="background: transparent; border: none;" data-toggle="modal" data-target="#modal-foto" data-nik="'.$row->nik.'">
+                        <img src="'.$imgSrc.'" alt="Foto Dosen" width="50px" class="img-thumbnail">
+                    </button>';
+        })
+        ->addColumn('aksi', function($row){
+            $btnEdit = '<a href="'.route('admin.dosen.edit', $row->nik).'" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+            $btnDelete = '<a href="'.route('admin.dosen.destroy', $row->nik).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin Hapus?\')"><i class="fas fa-trash"></i></a>';
+            return $btnEdit . ' ' . $btnDelete;
+        })
+        ->rawColumns(['foto_html', 'aksi'])
+        ->make(true);
+    }
         $hal = 'data_dosen';
-        return view('admin_data_dosen.index', compact('dosen', 'hal'));
+        return view('admin_data_dosen.index', compact('hal'));
     }
 
     public function store(Request $request)

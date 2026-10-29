@@ -92,7 +92,7 @@
                 <a href="{{ route('admin.perak.cetak_pdf') }}" class="btn btn-danger mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"></i>Export pdf</a>
                 <a href="{{ route('admin.perak.export_excel') }}" class="btn btn-success mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"></i>Export Excel</a>
 
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tabel-perak" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th width="5%">no</th>
@@ -104,19 +104,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach ($perak as $data)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $data->kode_akd }}</td>
-                            <td>{{ ($data->semester) =='GL'?'Ganjil' : 'Genap' }}</td>
-                            <td>{{ $data->tahun }}</td>
-                            <td>{{ ($data->is_active) =='1'?'Aktif' : 'Tidak Aktif' }}</td>
-                            <td>
-                                <a href="{{ route('admin.perak.edit', $data->kode_akd) }}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="{{ route('admin.perak.hapus', $data->kode_akd) }}" type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
+
                   </tbody>
                 </table>
               </div>
@@ -341,6 +329,23 @@
     var nim = $(e.relatedTarget).data('nim');
 
     $(e.currentTarget).find('input[name="nim"]').val(nim);
+  })
+</script>
+<script>
+  $(document).ready(function() {
+    $('#tabel-perak').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('admin.perak.index') }}",
+      columns: [
+        {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
+        {data: 'kode_akd', name: 'kode_akd'},
+        {data: 'semester_teks', name: 'semester_teks'},
+        {data: 'tahun', name: 'tahun'},
+        {data: 'status_teks', name: 'status_teks'},
+        {data: 'aksi', name: 'aksi', orderable: false, searchable: false}
+      ]
+    })
   })
 </script>
 </body>
