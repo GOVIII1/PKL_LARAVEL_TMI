@@ -9,13 +9,29 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Exports\JurusanExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\File;
+use Yajra\DataTables\Facades\DataTables;
 
 
 class JurusanController extends Controller
 {
-    public function index(){
-        $jurusan = Jurusan::all();
-        return view('admin_data_jurusan.index', compact('jurusan'));
+    public function index(Request $request){
+
+    if ($request->ajax()) {
+        $data = Jurusan::query();
+
+        return DataTables::of($data)
+        ->addIndexColumn()
+        ->addColumn('aksi', function($row){
+            $btnEdit = '<a href="'.route('admin.jurusan.edit', $row->kode_jurusan).'" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>';
+            $btnDelete = '<a href="'.route('admin.jurusan.hapus', $row->kode_jurusan).'" class="btn btn-danger btn-sm" onclick="return confirm(\'Yakin Hapus?\')"><i class="fas fa-trash"></i></a>';
+
+            return $btnEdit . ' ' . $btnDelete;
+        })
+        ->rawColumns(['aksi'])
+        ->make(true);
+    }
+
+    return view('admin_data_jurusan.index');
     }
 
     public function store(Request $request){

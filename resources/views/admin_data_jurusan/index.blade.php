@@ -92,7 +92,7 @@
                 <a href="{{ route('admin.jurusan.cetak_pdf') }}" class="btn btn-danger mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"> Export pdf</i></a>
                 <a href="{{ route('admin.jurusan.export_excel') }}" class="btn btn-success mb-2" target="_blank" type="button"><i class="fas fa-file-pdf"></i>Export Excel</a>
 
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="tabel-jurusan" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th width="5%">no</th>
@@ -102,17 +102,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                    @foreach ($jurusan as $data)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $data->kode_jurusan }}</td>
-                            <td>{{ $data->nama_jurusan }}</td>
-                            <td>
-                                <a href="{{ route('admin.jurusan.edit', $data->kode_jurusan) }}" type="button" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                                <a href="{{ route('admin.jurusan.hapus', $data->kode_jurusan) }}" type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                    @endforeach
+
                   </tbody>
                 </table>
               </div>
@@ -321,6 +311,21 @@
 
     $(e.currentTarget).find('input[name="nim"]').val(nim);
   })
+</script>
+<script>
+  $(document).ready(function() {
+    $('#tabel-jurusan').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: "{{ route('admin.jurusan.index') }}",
+      columns: [
+        {data: 'DT_RowIndex', name: 'DTRowIndex', orderable: false, searchable: false},
+        {data: 'kode_jurusan', name: 'kode_jurusan'},
+        {data: 'nama_jurusan', name: 'nama_jurusan'},
+        {data: 'aksi', name: 'aksi', orderable: false, searchable: false}
+      ]
+    });
+  });
 </script>
 </body>
 </html>
